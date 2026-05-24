@@ -160,19 +160,19 @@ function LandingPage() {
               icon: FileText,
               title: "Register & track",
               desc: "Every document gets a stable ID and a permanent QR code that always points to its live status and chain of custody.",
-              points: ["ULID-based document IDs", "Audit-grade history"],
+              
             },
             {
               icon: QrCode,
               title: "QR-powered handoffs",
               desc: "Scan to verify, scan to receive. Every handoff is logged automatically with timestamp, IP, and office signature.",
-              points: ["Auto-logged scans", "Office-to-office trace"],
+              
             },
             {
               icon: ShieldCheck,
               title: "Encrypted end-to-end",
               desc: "Sensitive fields never reach the DOM for unauthorized viewers. Owner and document names are server-side gated.",
-              points: ["Server-side authorization", "No blur — true masking"],
+              
             },
           ].map((f) => (
             <div
