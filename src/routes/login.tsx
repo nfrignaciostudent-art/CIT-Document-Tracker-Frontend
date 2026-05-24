@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { GraduationCap, Mail, Lock, ArrowRight } from "lucide-react";
+import { Mail, Lock, ArrowRight } from "lucide-react";
+import { Wordmark } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -88,16 +89,8 @@ export function AuthShell({
               "radial-gradient(circle at 20% 10%, white 0, transparent 35%), radial-gradient(circle at 90% 80%, var(--color-gold) 0, transparent 40%)",
           }}
         />
-        <Link to="/" className="relative flex items-center gap-2.5">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-[var(--color-gold)]/20 ring-1 ring-[var(--color-gold)]/40">
-            <GraduationCap className="size-5 text-[var(--color-gold)]" />
-          </div>
-          <div className="leading-tight">
-            <p className="text-sm font-bold">CIT DocTracker</p>
-            <p className="text-[10px] uppercase tracking-widest text-primary-foreground/70">
-              Document & QR Portal
-            </p>
-          </div>
+        <Link to="/" className="relative">
+          <Wordmark size="md" tone="light" subtitle="Document & QR Portal" />
         </Link>
         <div className="relative">
           <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--color-gold)]">
@@ -118,8 +111,8 @@ export function AuthShell({
 
       <div className="flex items-center justify-center bg-background px-4 py-10 md:px-10">
         <div className="w-full max-w-sm">
-          <Link to="/" className="mb-8 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground lg:hidden">
-            <GraduationCap className="size-4" /> CIT DocTracker
+          <Link to="/" className="mb-8 inline-flex items-center text-sm text-muted-foreground hover:text-foreground lg:hidden">
+            <Wordmark size="sm" showSubtitle={false} />
           </Link>
           <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
           <p className="mt-1.5 text-sm text-muted-foreground">{subtitle}</p>

@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Logo } from "@/components/brand/logo";
+import { Wordmark } from "@/components/brand/logo";
 import { StatusBadge } from "@/components/status-badge";
 
 export const Route = createFileRoute("/")({
@@ -50,16 +50,8 @@ function LandingPage() {
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 border-b border-border/50 bg-background/70 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-8">
-          <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-90">
-            <Logo variant="shield" className="size-9" />
-            <div className="leading-tight">
-              <p className="text-[13px] font-semibold tracking-tight">
-                CIT DocTracker
-              </p>
-              <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-                Document &amp; QR Generator
-              </p>
-            </div>
+          <Link to="/" className="transition-opacity hover:opacity-90">
+            <Wordmark size="sm" />
           </Link>
           <nav className="flex items-center gap-1.5">
             <Button asChild variant="ghost" size="sm" className="rounded-lg text-sm font-medium">

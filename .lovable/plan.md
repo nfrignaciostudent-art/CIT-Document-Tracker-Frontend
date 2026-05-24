@@ -1,129 +1,60 @@
+# Logo → Text-only + Status Badge Redesign
 
-# CIT Document Tracker — UI Redesign (React + Tailwind)
+## 1. Kill the logo, keep a standout wordmark
 
-Visual redesign of your CIT Document Tracker as a TanStack Start + Tailwind app. UI only — mock data, no backend wiring. Mirrors your repo's real screens, roles, and terminology so it can later be hooked back to your Express/MongoDB API.
+Goal: no SVG/icon logos anywhere. Just a clean, premium text mark — "CIT DocTracker" — that still feels like a brand, not plain text.
 
-## Scope clarification
+**`src/components/brand/logo.tsx`**
+- Delete the three SVG concepts (`ShieldMark`, `MonogramMark`, `EmblemMark`) and the `Logo` export.
+- Replace `Wordmark` with a pure text version:
+  - "CIT DocTracker" with tight tracking, semibold/bold weight.
+  - Subtle gradient on the text (navy → royal blue → faint gold accent on "Tracker") using `bg-clip-text text-transparent`.
+  - Optional small caps subtitle "Document & QR Generator" in muted foreground, wide letter-spacing.
+  - Size variants: `sm` (sidebar/header) and `lg` (landing hero / dashboard greeting).
+- Keep the `Wordmark` named export so existing imports keep working; remove the `LogoVariant` type.
 
-- **Source repo stack** (Node/Express + Mongo + vanilla JS) cannot run here. We're rebuilding the *frontend look* in this Lovable project's React stack.
-- Uses your repo's real statuses: **Received, Processing, For Approval, Approved, Released**, plus **Rejected** from your prompt brief (Pending = Received).
-- No real encryption / auth / DB — mock data only. Hooks left obvious so you can wire to your API later.
+**Call sites to clean up** (remove any standalone `<Logo />` usage, switch to the new text `Wordmark`):
+- `src/routes/__root.tsx`
+- `src/routes/index.tsx` (landing nav + hero badge)
+- `src/routes/dashboard.tsx` (page header / greeting block)
+- `src/routes/login.tsx`, `src/routes/signup.tsx`, `src/routes/logout.tsx`
+- `src/routes/track.tsx`, `src/routes/settings.tsx`, `src/routes/documents.tsx`
+- `src/components/app-sidebar.tsx`
 
-## Design system (src/styles.css)
+Also remove the favicon-style icon block if it sits next to the wordmark on the landing hero and dashboard header, so the wordmark stands alone.
 
-- Palette in `oklch`:
-  - background: near-white `#F8FAFC`
-  - foreground: deep navy `#0B1B3A`
-  - primary: navy `#0B2545`, primary-glow `#13315C`
-  - accent: light blue `#3B82F6`
-  - gold: `#C9A24B` (Released badge, subtle highlights)
-  - muted/soft gray surfaces, soft border
-- Tokens: `--gradient-primary` (navy → royal), `--shadow-elegant`, radius 0.75rem
-- Typography: Inter (Google Fonts), tight tracking on headings
-- Status badge variants:
-  - Received → slate
-  - Processing → sky
-  - For Approval → amber
-  - Approved → emerald
-  - Released → gold
-  - Rejected → rose
+## 2. Redesign status badges (modern SaaS chips)
 
-## Routes (TanStack Start)
+File: **`src/components/status-badge.tsx`**
 
-```
-src/routes/
-  __root.tsx                  # SidebarProvider + header shell
-  index.tsx                   # Dashboard (admin view)
-  documents.tsx               # All documents table
-  documents.$docId.tsx        # Document detail (history, QR, files)
-  register.tsx                # New document registration form
-  qr-generator.tsx            # Generate/print QR for a doc
-  qr-scanner.tsx              # Upload QR image to decode + look up
-  track.tsx                   # Public tracking view (?track=<id>) styled
-  scan-logs.tsx               # Auto scan_logs feed
-  movements.tsx               # Manual movement log entry + list
-  users.tsx                   # Admin user mgmt + online heartbeat
-  profile.tsx                 # Current user profile
-```
+Rebuild the chip so it reads like Linear / Vercel / Stripe:
 
-Each route has its own `head()` with unique title + description.
+- **Shape**: full pill, slightly tighter horizontal padding (`px-2.5 py-0.5`), height ~22px.
+- **Border**: hairline 1px ring at very low opacity (`ring-1 ring-inset` with `~/15`).
+- **Surface**: glassy tinted background — layered `bg-gradient-to-b from-{color}/12 to-{color}/6` over `backdrop-blur-md`.
+- **Shadow**: soft, low-spread (`shadow-[0_1px_2px_-1px_oklch(0_0_0/0.08),inset_0_1px_0_oklch(1_0_0/0.06)]`).
+- **Typography**: `text-[11px] font-medium tracking-tight`, sentence case, no uppercase.
+- **Dot**: 6px solid dot with a faint outer glow ring (`shadow-[0_0_0_3px_{color}/15]`), no `animate-ping` (too cartoonish). Reserve a gentle `animate-pulse` only for `Processing`.
+- **Hover**: smooth 200ms transition — ring opacity bumps slightly, background brightens a hair, subtle `translate-y-[-0.5px]`. No scale jumps.
+- **Dark mode**: same tokens, brighter text, dimmer surface.
 
-## Components
+Color register (refined, less candy):
+- Released → warm amber
+- Approved → emerald
+- For Approval → soft orange
+- Processing → sky (with the gentle pulse on the dot)
+- Received → neutral slate
+- Rejected → muted red
 
-```
-src/components/
-  app-sidebar.tsx             # Navy gradient, CIT crest, collapsible icon mode
-  top-header.tsx              # Search, notifications, profile, sidebar trigger
-  stat-card.tsx               # Icon, label, value, delta — hover lift
-  status-badge.tsx            # All 6 status variants
-  document-table.tsx          # shadcn Table: displayId, name, status, owner, updated
-  filter-bar.tsx              # Search + status select + date range
-  document-detail/
-    header.tsx                # fullDisplayId, status, owner, dates
-    qr-panel.tsx              # Rendered QR + download/print
-    files-panel.tsx           # Original (locked) vs Processed (release-gated)
-    history-timeline.tsx      # Combined scan_logs + movements
-    movement-form.tsx         # Admin-only entry
-  register-form.tsx           # Document name + file dropzone (mock encrypt)
-  qr-upload-dropzone.tsx      # jsqr decode of uploaded image
-  online-users-strip.tsx      # Heartbeat-style green dots
-  notifications-panel.tsx     # Sheet slide-over
-```
-
-QR rendering: `qrcode.react`. QR decode: `jsqr`. Charts (status overview): `recharts`. Dates: `date-fns`.
-
-## Dashboard (index)
-
-- Navy gradient hero band: greeting + quick actions (Register, Generate QR, Scan QR)
-- 5 stat cards: Total, Processing, For Approval, Approved, Released (gold)
-- 2-col: Status overview chart + Recent scan/movement timeline
-- Online users strip (mock heartbeat)
-
-## Documents page
-
-- Filter bar (search by displayId/name, status, date range)
-- Table with sortable columns + row hover
-- Row actions: View detail, QR, Download (if Released)
-- Pagination
-
-## Document detail
-
-- Header card with fullDisplayId, status, owner, timestamps
-- Tabs: Overview · QR · Files · History · Movement (admin)
-- Files panel: original (reference-only badge), processed (Release-gated)
-- History timeline merges scan_logs (auto, public) and doc.history movements (admin), color-coded
-
-## QR Generator
-
-- Form: select existing document or paste ID
-- Live QR preview card with Download PNG / Print / Copy track URL
-- Receipt-style print layout (fullDisplayId, QR, instructions)
-
-## QR Scanner
-
-- Upload dropzone → decode via jsqr → show matched mock document + link to detail
-- Empty/error states
-
-## Public tracking view (`/track?track=<id>`)
-
-- Minimal, no-auth layout
-- Big status badge, fullDisplayId, timeline, download button if Released
-- Auto-logs scan to mock scan_logs on mount
-
-## Mock data
-
-`src/lib/mock-data.ts` — documents (with internalId/displayId/verifyCode), users, scan_logs, movements, notifications. Helpers: `findByInternalId`, `addScanLog`, `addMovement`.
-
-## Technical notes
-
-- New packages: `qrcode.react`, `jsqr`, `recharts`, `date-fns`, `ulid`
-- All colors via semantic tokens — no raw hex in components
-- Sidebar uses shadcn Sidebar with `collapsible="icon"`; trigger lives in header
-- Fully responsive: stat grid 1/2/3/5 cols, tables horizontal-scroll on mobile, sidebar offcanvas on mobile
-- Wire points clearly marked with `// TODO: replace with API call` so you can later plug your Express endpoints
+No changes to the `DocStatus` type or any consumer — drop-in replacement.
 
 ## Out of scope
 
-- Real auth, JWT, MongoDB, IDEA-128, file encryption, real camera scanning
-- Importing/migrating the vanilla-JS frontend code
-- Backend changes to your CIT repo
+- No data model, route, or auth changes.
+- No restyle of other badges, buttons, or cards beyond the status chip.
+
+## Technical notes
+
+- All colors stay in the existing Tailwind + token system (`oklch` via `src/styles.css` where applicable). No new dependencies.
+- Wordmark gradient uses the existing navy/royal/gold tokens already defined for the old logo so brand color continuity is preserved.
+- Keeping the `Wordmark` export name + `className` prop avoids touching every call site's layout.
