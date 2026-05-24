@@ -260,7 +260,7 @@ function TrackPage() {
                     <li key={i} className="relative">
                       <span className="absolute -left-[26px] mt-1.5 size-2.5 rounded-full bg-accent ring-4 ring-card" />
                       <p className="text-sm font-medium">{t.label}</p>
-                      <p className="text-[11px] text-muted-foreground">
+                      <p className="text-[11px] text-muted-foreground" suppressHydrationWarning>
                         {format(new Date(t.at), "PPp")}
                         {t.sub ? ` · ${t.sub}` : ""}
                       </p>
