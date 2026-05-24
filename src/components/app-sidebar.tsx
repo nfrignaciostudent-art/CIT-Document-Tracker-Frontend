@@ -93,18 +93,21 @@ export function AppSidebar() {
       collapsible="icon"
       className="border-r-0 [&_[data-sidebar=sidebar]]:bg-[image:var(--gradient-primary)]"
     >
-      <SidebarHeader className="border-b border-sidebar-border/40 px-3 py-4">
-        <div className="flex items-center gap-3">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-gold)]/20 ring-1 ring-[var(--color-gold)]/40">
-            <GraduationCap className="size-5 text-[var(--color-gold)]" />
+      <SidebarHeader className="border-b border-sidebar-border/40 px-4 py-5">
+        {collapsed ? (
+          <p className="text-center text-sm font-bold tracking-tight text-[var(--color-gold)]">
+            CIT
+          </p>
+        ) : (
+          <div className="leading-none">
+            <p className="text-[15px] font-bold tracking-[-0.02em] text-sidebar-foreground">
+              CIT Doc<span className="text-[var(--color-gold)]">Tracker</span>
+            </p>
+            <p className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.22em] text-sidebar-foreground/55">
+              Document &amp; QR Generator
+            </p>
           </div>
-          {!collapsed && (
-            <div className="min-w-0">
-              <p className="truncate text-sm font-bold text-sidebar-foreground">CIT DocTracker</p>
-              <p className="truncate text-[11px] text-sidebar-foreground/60">Document & QR Generator</p>
-            </div>
-          )}
-        </div>
+        )}
       </SidebarHeader>
       <SidebarContent className="px-1">
         <Section label="Tracking" items={tracking} current={current} />

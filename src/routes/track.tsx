@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button";
 import { format, formatDistanceToNow } from "date-fns";
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
-import { Logo } from "@/components/brand/logo";
+
 
 type Search = { track?: string };
 
@@ -174,9 +174,6 @@ function TrackPage() {
           {/* secure mesh overlay */}
           <div className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(var(--color-gold)_1px,transparent_1px),linear-gradient(90deg,var(--color-gold)_1px,transparent_1px)] [background-size:24px_24px]" />
           <div className="flex items-start gap-4">
-            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/20">
-              <Logo variant="shield" className="size-7" />
-            </div>
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--color-gold)]">
                 CIT · Document Receipt
