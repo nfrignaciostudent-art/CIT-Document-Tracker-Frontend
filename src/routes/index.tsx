@@ -197,14 +197,6 @@ function LandingPage() {
                 <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
                   {f.desc}
                 </p>
-                <ul className="mt-4 space-y-1.5">
-                  {f.points.map((p) => (
-                    <li key={p} className="flex items-center gap-2 text-[12px] text-foreground/75">
-                      <CheckCircle2 className="size-3.5 shrink-0 text-primary/70" strokeWidth={2} />
-                      {p}
-                    </li>
-                  ))}
-                </ul>
               </div>
             </div>
           ))}
