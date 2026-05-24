@@ -9,7 +9,7 @@ import {
   ArrowRightLeft,
   Users,
   UserCircle,
-  GraduationCap,
+  
   Settings,
   LogOut,
 } from "lucide-react";
