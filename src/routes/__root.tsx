@@ -130,12 +130,16 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SidebarProvider>
-        <div className="flex min-h-screen w-full">
-          <AppSidebar />
-          <div className="flex min-w-0 flex-1 flex-col">
-            <TopHeader />
-            <main className="flex-1 px-4 py-6 md:px-8 md:py-8">
+      <SidebarProvider className="print:hidden">
+        <div className="flex min-h-screen w-full print:block">
+          <div className="print:hidden">
+            <AppSidebar />
+          </div>
+          <div className="flex min-w-0 flex-1 flex-col print:block">
+            <div className="print:hidden">
+              <TopHeader />
+            </div>
+            <main className="flex-1 px-4 py-6 md:px-8 md:py-8 print:p-0">
               <Outlet />
             </main>
           </div>

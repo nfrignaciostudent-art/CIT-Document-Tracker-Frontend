@@ -71,7 +71,7 @@ function QRGeneratorPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-5">
+    <div className="mx-auto max-w-5xl space-y-5 print:hidden">
       <div>
         <h1 className="text-2xl font-bold">QR Generator</h1>
         <p className="text-sm text-muted-foreground">Print or share a QR that always reflects the document's live status.</p>
