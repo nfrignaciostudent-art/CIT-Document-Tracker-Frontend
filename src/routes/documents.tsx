@@ -36,9 +36,9 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/documents")({
   head: () => ({
     meta: [
-      { title: "Documents · CIT Document Tracker" },
+      { title: "Documents · CIT DocuTrack" },
       { name: "description", content: "Full registry of tracked school documents with filters and status." },
-      { property: "og:title", content: "Documents · CIT Document Tracker" },
+      { property: "og:title", content: "Documents · CIT DocuTrack" },
       { property: "og:description", content: "Full registry of tracked school documents with filters and status." },
     ],
   }),

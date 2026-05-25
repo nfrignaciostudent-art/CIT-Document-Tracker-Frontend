@@ -18,13 +18,13 @@ import { StatusBadge } from "@/components/status-badge";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CIT Document Tracker · Track Your Document" },
+      { title: "CIT DocuTrack · Track Your Document" },
       {
         name: "description",
         content:
           "Enter your Document ID to instantly see status, location, and full history. Real-time, encrypted, and QR-powered.",
       },
-      { property: "og:title", content: "CIT Document Tracker · Track Your Document" },
+      { property: "og:title", content: "CIT DocuTrack · Track Your Document" },
       {
         property: "og:description",
         content:
@@ -213,7 +213,7 @@ function LandingPage() {
 
       <footer className="border-t bg-muted/30">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-[11px] text-muted-foreground md:flex-row md:px-8">
-          <p>© {new Date().getFullYear()} CIT Document Tracker</p>
+          <p>© {new Date().getFullYear()} CIT DocuTrack</p>
           <p>Built for the University of the Assumption</p>
         </div>
       </footer>

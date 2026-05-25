@@ -59,7 +59,7 @@ function decryptIfEncrypted(val?: string): string {
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard · CIT Document Tracker" },
+      { title: "Dashboard · CIT DocuTrack" },
       { name: "description", content: "Overview of IT department document statuses, recent scans, and movements." },
     ],
   }),

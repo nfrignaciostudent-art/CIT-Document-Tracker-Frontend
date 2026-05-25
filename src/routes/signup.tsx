@@ -12,8 +12,8 @@ import { CIT_VAULT } from "@/lib/crypto";
 export const Route = createFileRoute("/signup")({
   head: () => ({
     meta: [
-      { title: "Create account · CIT Document Tracker" },
-      { name: "description", content: "Create your CIT Document Tracker account." },
+      { title: "Create account · CIT DocuTrack" },
+      { name: "description", content: "Create your CIT DocuTrack account." },
     ],
   }),
   component: SignupPage,
@@ -73,7 +73,7 @@ function SignupPage() {
   };
 
   return (
-    <AuthShell title="Create your account" subtitle="Get a CIT DocTracker account in seconds.">
+    <AuthShell title="Create your account" subtitle="Get a CIT DocuTrack account in seconds.">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
           <Label htmlFor="name">Full name</Label>

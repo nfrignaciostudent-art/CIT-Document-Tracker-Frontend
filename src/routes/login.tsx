@@ -17,8 +17,8 @@ export const Route = createFileRoute("/login")({
   },
   head: () => ({
     meta: [
-      { title: "Sign in · CIT Document Tracker" },
-      { name: "description", content: "Sign in to your CIT Document Tracker account." },
+      { title: "Sign in · CIT DocuTrack" },
+      { name: "description", content: "Sign in to your CIT DocuTrack account." },
     ],
   }),
   component: LoginPage,
@@ -151,7 +151,7 @@ export function AuthShell({
           </p>
         </div>
         <p className="relative text-[11px] text-primary-foreground/60">
-          © {new Date().getFullYear()} CIT Document Tracker
+          © {new Date().getFullYear()} CIT DocuTrack
         </p>
       </div>
 

@@ -155,7 +155,7 @@ function QRGeneratorPage() {
           <div className="inline-flex size-10 items-center justify-center rounded-xl bg-[#0B2545] text-[#EEB902] font-bold text-lg ring-1 ring-[#EEB902]/40">
             C
           </div>
-          <h2 className="text-sm font-extrabold uppercase tracking-[0.2em] text-slate-900 mt-2">CIT DocTracker</h2>
+          <h2 className="text-sm font-extrabold uppercase tracking-[0.2em] text-slate-900 mt-2">CIT DocuTrack</h2>
           <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Official QR Tracking Slip</p>
         </div>
 

@@ -1,7 +1,7 @@
 /* ══════════════════════════════════════════════════════════════════════
    src/lib/crypto.ts
    IDEA-128 CBC Mode  +  PBKDF2 Key Derivation  +  Zero-Knowledge Vault
-   CIT Document Tracker
+   CIT DocuTrack
    ══════════════════════════════════════════════════════════════════════ */
 
 // Obfuscated representation of legacy key "Group6CITKey2024" to prevent easy extraction

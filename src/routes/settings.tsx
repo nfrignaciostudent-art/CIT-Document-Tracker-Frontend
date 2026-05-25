@@ -31,7 +31,7 @@ function SettingsPage() {
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="org">Organization name</Label>
-            <Input id="org" defaultValue="CIT DocTracker" />
+            <Input id="org" defaultValue="CIT DocuTrack" />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="dept">Department</Label>

@@ -53,7 +53,7 @@ export const Route = createFileRoute("/track")({
   }),
   head: () => ({
     meta: [
-      { title: "Track Document · CIT Document Tracker" },
+      { title: "Track Document · CIT DocuTrack" },
       {
         name: "description",
         content:
@@ -523,7 +523,7 @@ function TrackPage() {
         </div>
 
         <footer className="border-t bg-muted/30 px-6 py-3 text-center text-[10px] uppercase tracking-[0.18em] text-muted-foreground md:px-8">
-          CIT Document Tracker · Official Receipt
+          CIT DocuTrack · Official Receipt
         </footer>
       </article>
     </div>

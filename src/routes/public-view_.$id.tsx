@@ -134,7 +134,7 @@ function PublicViewPage() {
       {/* Footer */}
       <footer className="border-t bg-muted/30 py-5">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-2 px-4 text-[11px] text-muted-foreground md:flex-row">
-          <p>© {new Date().getFullYear()} CIT Document Tracker</p>
+          <p>© {new Date().getFullYear()} CIT DocuTrack</p>
           <p>University of the Assumption</p>
         </div>
       </footer>

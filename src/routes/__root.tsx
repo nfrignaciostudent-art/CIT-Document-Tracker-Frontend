@@ -68,10 +68,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CIT Document Tracker · QR Portal" },
+      { title: "CIT DocuTrack · QR Portal" },
       { name: "description", content: "Track school documents and generate QR codes for end-to-end status visibility." },
       { name: "author", content: "CIT" },
-      { property: "og:title", content: "CIT Document Tracker · QR Portal" },
+      { property: "og:title", content: "CIT DocuTrack · QR Portal" },
       { property: "og:description", content: "Track school documents and generate QR codes for end-to-end status visibility." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
