@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Text-only brand wordmark. No icon, no SVG — just typography that stands on its own.
- * Uses a subtle navy → royal blue gradient with a faint gold accent on "Tracker".
+ * Uses a subtle navy → royal blue gradient with a faint gold accent on "Track".
  */
 export function Wordmark({
   className,
@@ -36,7 +36,7 @@ export function Wordmark({
             : "bg-clip-text text-transparent bg-[image:linear-gradient(120deg,oklch(0.22_0.05_260)_0%,oklch(0.40_0.14_258)_55%,oklch(0.22_0.05_260)_100%)] dark:bg-[image:linear-gradient(120deg,oklch(0.96_0.01_260)_0%,oklch(0.82_0.10_258)_55%,oklch(0.96_0.01_260)_100%)]",
         )}
       >
-        CIT Doc
+        CIT Docu
         <span
           className={cn(
             isLight
@@ -44,7 +44,7 @@ export function Wordmark({
               : "bg-clip-text text-transparent bg-[image:linear-gradient(120deg,oklch(0.74_0.13_85),oklch(0.82_0.14_82))]",
           )}
         >
-          Tracker
+          Track
         </span>
       </span>
       {showSubtitle && (
