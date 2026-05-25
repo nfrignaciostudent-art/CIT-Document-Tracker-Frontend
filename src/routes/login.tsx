@@ -1,13 +1,20 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Mail, Lock, ArrowRight } from "lucide-react";
+import { User, Lock, ArrowRight, ArrowLeft } from "lucide-react";
 import { Wordmark } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import api from "@/lib/api";
+import { CIT_VAULT } from "@/lib/crypto";
 
 export const Route = createFileRoute("/login")({
+  validateSearch: (search: Record<string, unknown>): { redirect?: string } => {
+    return {
+      redirect: typeof search.redirect === "string" ? search.redirect : undefined,
+    };
+  },
   head: () => ({
     meta: [
       { title: "Sign in · CIT Document Tracker" },
@@ -19,29 +26,68 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const { redirect } = Route.useSearch();
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const response = await api.post("/auth/login", { username, password });
+      const user = response.data;
+
+      // Derive and activate vault key
+      await CIT_VAULT.deriveAndActivate(password, user.passwordSalt, user.encryptedIdeaKey);
+
+      // Self-Healing Fallback: if user keys were cleared/reset, regenerate and upload them
+      if (!user.encryptedIdeaKey || !user.passwordSalt) {
+        try {
+          // Set temporary token so patch request includes Authorization header
+          localStorage.setItem("token", user.token);
+          const { saltHex, encryptedKeyHex } = await CIT_VAULT.generateAndWrap(password);
+          await api.patch("/auth/vault-key", {
+            encryptedIdeaKey: encryptedKeyHex,
+            passwordSalt: saltHex,
+          });
+          user.encryptedIdeaKey = encryptedKeyHex;
+          user.passwordSalt = saltHex;
+        } catch (healErr) {
+          console.error("[Self-Healing] Failed to auto-repair vault keys", healErr);
+        }
+      }
+
+      localStorage.setItem("token", user.token);
+      localStorage.setItem("user", JSON.stringify(user));
+      
+      toast.success(`Welcome back, ${user.name || 'User'}`);
+      // Check sessionStorage first (set by tracking page "Sign In" button).
+      // This avoids URL-encoding issues where nested ?track= gets stripped.
+      const storedRedirect = sessionStorage.getItem("postLoginRedirect");
+      if (storedRedirect) {
+        sessionStorage.removeItem("postLoginRedirect");
+        window.location.href = storedRedirect;
+      } else {
+        navigate({ to: "/dashboard" });
+      }
+    } catch (error: any) {
+      console.error("Login failed", error);
+      toast.error(error.response?.data?.message || "Invalid credentials");
+    } finally {
       setLoading(false);
-      toast.success("Welcome back, Admin Office");
-      navigate({ to: "/dashboard" });
-    }, 600);
+    }
   };
 
   return <AuthShell title="Welcome back" subtitle="Sign in to manage your documents.">
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="username">Username / Student ID</Label>
         <div className="relative">
-          <Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input id="email" type="email" required value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@cit.edu" className="h-11 rounded-xl pl-9" />
+          <User className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input id="username" type="text" required value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter your username or student ID" className="h-11 rounded-xl pl-9" />
         </div>
       </div>
       <div className="space-y-1.5">
@@ -53,7 +99,7 @@ function LoginPage() {
           <Lock className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input id="password" type="password" required value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••" className="h-11 rounded-xl pl-9" />
+            placeholder="Enter your password" className="h-11 rounded-xl pl-9" />
         </div>
       </div>
       <Button type="submit" disabled={loading}
@@ -80,7 +126,7 @@ export function AuthShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
+    <div className="grid min-h-screen lg:grid-cols-[35%_65%]">
       <div className="relative hidden overflow-hidden bg-[image:var(--gradient-hero)] p-10 text-primary-foreground lg:flex lg:flex-col lg:justify-between">
         <div
           className="absolute inset-0 opacity-20"
@@ -94,7 +140,7 @@ export function AuthShell({
         </Link>
         <div className="relative">
           <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--color-gold)]">
-            College of Information Technology
+            University of the Assumption
           </p>
           <h2 className="mt-2 text-3xl font-bold leading-tight md:text-4xl">
             Track every document, end to end.
@@ -111,8 +157,9 @@ export function AuthShell({
 
       <div className="flex items-center justify-center bg-background px-4 py-10 md:px-10">
         <div className="w-full max-w-sm">
-          <Link to="/" className="mb-8 inline-flex items-center text-sm text-muted-foreground hover:text-foreground lg:hidden">
-            <Wordmark size="sm" showSubtitle={false} />
+          <Link to="/" className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="size-4" />
+            Back to home
           </Link>
           <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
           <p className="mt-1.5 text-sm text-muted-foreground">{subtitle}</p>

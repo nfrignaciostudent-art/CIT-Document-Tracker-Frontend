@@ -28,7 +28,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Real-time document tracking for the College of Information Technology with QR codes and secure encryption.",
+          "Real-time document tracking for the University of the Assumption with QR codes and secure encryption.",
       },
     ],
   }),
@@ -49,7 +49,7 @@ function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 border-b border-border/50 bg-background/70 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-8">
+        <div className="flex w-full h-16 items-center justify-between px-4 md:px-8">
           <Link to="/" className="transition-opacity hover:opacity-90">
             <Wordmark size="sm" />
           </Link>
@@ -92,7 +92,7 @@ function LandingPage() {
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-balance text-[15px] leading-relaxed text-muted-foreground">
             Enter a Document ID or scan a CIT QR to view live status, handoffs,
-            and verification — owner data stays encrypted until you sign in.
+            and verification. Document details are visible to authorized personnel only.
           </p>
 
           <form
@@ -104,7 +104,7 @@ function LandingPage() {
               <Input
                 value={docId}
                 onChange={(e) => setDocId(e.target.value.toUpperCase())}
-                placeholder="DOC-YYYYMMDD-XXXX"
+                placeholder="Enter your Document ID"
                 spellCheck={false}
                 autoComplete="off"
                 className="h-12 rounded-xl border-0 bg-transparent pl-10 font-mono text-base tracking-wider shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -121,9 +121,6 @@ function LandingPage() {
 
           <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
-              <Lock className="size-3.5 text-primary/70" /> Zero-knowledge masking
-            </span>
-            <span className="inline-flex items-center gap-1.5">
               <ScanLine className="size-3.5 text-primary/70" /> Scan-to-track QR
             </span>
             <span className="inline-flex items-center gap-1.5">
@@ -131,25 +128,7 @@ function LandingPage() {
             </span>
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-[11px]">
-            <span className="text-muted-foreground">Try a sample:</span>
-            {[
-              { id: "DOC-20260418-0001", status: "Released" as const },
-              { id: "DOC-20260419-0003", status: "For Approval" as const },
-              { id: "DOC-20260419-0004", status: "Processing" as const },
-              { id: "DOC-20260424-0010", status: "Approved" as const },
-            ].map((s) => (
-              <Link
-                key={s.id}
-                to="/track"
-                search={{ track: s.id }}
-                className="group inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/60 px-2 py-1 font-mono text-[10px] text-foreground/80 shadow-sm backdrop-blur transition-all hover:border-primary/30 hover:bg-card hover:text-foreground hover:shadow-md"
-              >
-                <StatusBadge status={s.status} className="-my-1 px-1.5 py-0.5 text-[9px]" />
-                {s.id}
-              </Link>
-            ))}
-          </div>
+
         </div>
       </section>
 
@@ -203,11 +182,6 @@ function LandingPage() {
         </div>
 
         <div className="relative mt-12 overflow-hidden rounded-2xl bg-[image:var(--gradient-hero)] p-7 text-primary-foreground shadow-[var(--shadow-elegant)] md:p-9">
-          {/* mesh overlay */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:linear-gradient(white_1px,transparent_1px),linear-gradient(90deg,white_1px,transparent_1px)] [background-size:28px_28px]"
-          />
           <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--color-gold)]">
@@ -240,7 +214,7 @@ function LandingPage() {
       <footer className="border-t bg-muted/30">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-[11px] text-muted-foreground md:flex-row md:px-8">
           <p>© {new Date().getFullYear()} CIT Document Tracker</p>
-          <p>Built for the College of Information Technology</p>
+          <p>Built for the University of the Assumption</p>
         </div>
       </footer>
     </div>

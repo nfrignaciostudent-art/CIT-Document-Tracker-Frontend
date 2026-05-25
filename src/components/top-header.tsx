@@ -10,11 +10,64 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { notifications } from "@/lib/mock-data";
-import { formatDistanceToNow } from "date-fns";
+import { useState, useEffect } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import api from "@/lib/api";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { CIT_VAULT } from "@/lib/crypto";
+
+function decryptMessageHtml(msg: string): string {
+  if (!msg) return "";
+  return msg.replace(/\{"iv"\s*:\s*"[a-f0-9]+"\s*,\s*"data"\s*:\s*"[a-f0-9]+"\}/gi, (match) => {
+    try {
+      return CIT_VAULT.decrypt(match) || match;
+    } catch (e) {
+      return match;
+    }
+  });
+}
 
 export function TopHeader() {
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [open, setOpen] = useState(false);
   const unread = notifications.filter((n) => !n.read).length;
+  const navigate = useNavigate();
+  const { user: fetchedUser } = useCurrentUser();
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      const res = await api.get('/notifications');
+      setNotifications(res.data || []);
+    } catch (err) {
+      console.error("Failed to fetch notifications", err);
+    }
+  };
+
+  const handleOpenChange = async (newOpen: boolean) => {
+    setOpen(newOpen);
+    if (newOpen && unread > 0) {
+      try {
+        await api.post('/notifications/mark-read');
+        setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+      } catch (err) {
+        console.error("Failed to mark notifications as read", err);
+      }
+    }
+  };
+
+  const handleNotificationClick = (n: any) => {
+    if (n.documentId) {
+      navigate({ to: `/documents/${n.documentId}` });
+      setOpen(false);
+    }
+  };
+  
+  const user = fetchedUser || { name: "Admin Office", role: "admin" };
+  const initials = (user.name || "A").split(" ").map((s: string) => s[0]).slice(0, 2).join("");
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur-md md:px-6">
@@ -27,7 +80,7 @@ export function TopHeader() {
         />
       </div>
       <div className="ml-auto flex items-center gap-2">
-        <Sheet>
+        <Sheet open={open} onOpenChange={handleOpenChange}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="relative rounded-xl">
               <Bell className="size-5" />
@@ -43,18 +96,23 @@ export function TopHeader() {
               <SheetTitle>Notifications</SheetTitle>
             </SheetHeader>
             <div className="mt-4 space-y-2 overflow-y-auto pr-1">
+              {notifications.length === 0 && <p className="text-sm text-muted-foreground">No new notifications.</p>}
               {notifications.map((n) => (
                 <div
                   key={n.id}
-                  className="rounded-xl border bg-card p-3 transition-colors hover:bg-muted/40"
+                  onClick={() => handleNotificationClick(n)}
+                  className={`rounded-xl border bg-card p-3 transition-colors hover:bg-muted/40 ${n.documentId ? 'cursor-pointer' : ''}`}
                 >
                   <div className="flex items-start gap-2">
                     {!n.read && <span className="mt-1.5 size-2 shrink-0 rounded-full bg-accent" />}
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold">{n.title}</p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">{n.body}</p>
+                      <p className="text-sm font-semibold">Document Update</p>
+                      <p 
+                        className="mt-0.5 text-xs text-muted-foreground leading-relaxed" 
+                        dangerouslySetInnerHTML={{ __html: decryptMessageHtml(n.msg) }} 
+                      />
                       <p className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground/70">
-                        {formatDistanceToNow(new Date(n.at), { addSuffix: true })}
+                        {n.date}
                       </p>
                     </div>
                   </div>
@@ -65,13 +123,13 @@ export function TopHeader() {
         </Sheet>
         <div className="flex items-center gap-3 rounded-xl border bg-card px-2 py-1.5 pr-3">
           <Avatar className="size-8">
-            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
-              AO
+            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold uppercase">
+              {initials}
             </AvatarFallback>
           </Avatar>
           <div className="hidden text-left sm:block">
-            <p className="text-xs font-semibold leading-tight">Admin Office</p>
-            <p className="text-[10px] text-muted-foreground">IT Department · Admin</p>
+            <p className="text-xs font-semibold leading-tight capitalize">{user.name}</p>
+            <p className="text-[10px] text-muted-foreground capitalize">IT Department · {user.role}</p>
           </div>
         </div>
       </div>

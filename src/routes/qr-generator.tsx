@@ -1,14 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
-import { Copy, Download, Printer } from "lucide-react";
+import { Copy, Download, Printer, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { documents, getFullDisplayId } from "@/lib/mock-data";
+import { getFullDisplayId, type Document } from "@/lib/dashboard-utils";
 import { toast } from "sonner";
+import api from "@/lib/api";
 
 type Search = { id?: string };
 
@@ -27,19 +28,47 @@ export const Route = createFileRoute("/qr-generator")({
 
 function QRGeneratorPage() {
   const search = Route.useSearch();
-  const [docId, setDocId] = useState(search.id ?? documents[0].internalId);
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [docId, setDocId] = useState<string | undefined>(search.id);
+
+  useEffect(() => {
+    async function loadDocs() {
+      try {
+        const res = await api.get("/documents");
+        setDocuments(res.data || []);
+        if (res.data?.length > 0 && !search.id) {
+          setDocId(res.data[0].internalId);
+        }
+      } catch (err) {
+        console.error("Failed to load documents", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadDocs();
+  }, [search.id]);
+
   const doc = documents.find((d) => d.internalId === docId) ?? documents[0];
-  const trackUrl = typeof window !== "undefined" ? `${window.location.origin}/track?track=${doc.internalId}` : `/track?track=${doc.internalId}`;
+  const trackUrl = typeof window !== "undefined" && doc ? `${window.location.origin}/track?track=${doc.internalId}&source=qr` : "";
 
   const download = () => {
     const canvas = document.querySelector<HTMLCanvasElement>("#qr-canvas canvas");
-    if (!canvas) return;
+    if (!canvas || !doc) return;
     const link = document.createElement("a");
     link.download = `${getFullDisplayId(doc)}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
   };
   const copy = () => { navigator.clipboard.writeText(trackUrl); toast.success("Tracking URL copied"); };
+
+  if (isLoading) {
+    return <div className="flex h-[50vh] items-center justify-center"><Loader2 className="size-8 animate-spin text-muted-foreground" /></div>;
+  }
+
+  if (!doc) {
+    return <div className="p-8 text-center text-muted-foreground">No documents found to generate QR.</div>;
+  }
 
   return (
     <div className="mx-auto max-w-5xl space-y-5">

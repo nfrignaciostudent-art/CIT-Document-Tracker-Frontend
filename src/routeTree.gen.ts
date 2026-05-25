@@ -17,6 +17,7 @@ import { Route as ScanLogsRouteImport } from './routes/scan-logs'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as QrScannerRouteImport } from './routes/qr-scanner'
 import { Route as QrGeneratorRouteImport } from './routes/qr-generator'
+import { Route as PublicDocumentsRouteImport } from './routes/public-documents'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as MovementsRouteImport } from './routes/movements'
 import { Route as LogoutRouteImport } from './routes/logout'
@@ -24,7 +25,8 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DocumentsDocIdRouteImport } from './routes/documents.$docId'
+import { Route as PublicViewIdRouteImport } from './routes/public-view_.$id'
+import { Route as DocumentsDocIdRouteImport } from './routes/documents_.$docId'
 
 const UsersRoute = UsersRouteImport.update({
   id: '/users',
@@ -66,6 +68,11 @@ const QrGeneratorRoute = QrGeneratorRouteImport.update({
   path: '/qr-generator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PublicDocumentsRoute = PublicDocumentsRouteImport.update({
+  id: '/public-documents',
+  path: '/public-documents',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -101,20 +108,26 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PublicViewIdRoute = PublicViewIdRouteImport.update({
+  id: '/public-view_/$id',
+  path: '/public-view/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DocumentsDocIdRoute = DocumentsDocIdRouteImport.update({
-  id: '/$docId',
-  path: '/$docId',
-  getParentRoute: () => DocumentsRoute,
+  id: '/documents_/$docId',
+  path: '/documents/$docId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
-  '/documents': typeof DocumentsRouteWithChildren
+  '/documents': typeof DocumentsRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/movements': typeof MovementsRoute
   '/profile': typeof ProfileRoute
+  '/public-documents': typeof PublicDocumentsRoute
   '/qr-generator': typeof QrGeneratorRoute
   '/qr-scanner': typeof QrScannerRoute
   '/register': typeof RegisterRoute
@@ -124,15 +137,17 @@ export interface FileRoutesByFullPath {
   '/track': typeof TrackRoute
   '/users': typeof UsersRoute
   '/documents/$docId': typeof DocumentsDocIdRoute
+  '/public-view/$id': typeof PublicViewIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
-  '/documents': typeof DocumentsRouteWithChildren
+  '/documents': typeof DocumentsRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/movements': typeof MovementsRoute
   '/profile': typeof ProfileRoute
+  '/public-documents': typeof PublicDocumentsRoute
   '/qr-generator': typeof QrGeneratorRoute
   '/qr-scanner': typeof QrScannerRoute
   '/register': typeof RegisterRoute
@@ -142,16 +157,18 @@ export interface FileRoutesByTo {
   '/track': typeof TrackRoute
   '/users': typeof UsersRoute
   '/documents/$docId': typeof DocumentsDocIdRoute
+  '/public-view/$id': typeof PublicViewIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
-  '/documents': typeof DocumentsRouteWithChildren
+  '/documents': typeof DocumentsRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/movements': typeof MovementsRoute
   '/profile': typeof ProfileRoute
+  '/public-documents': typeof PublicDocumentsRoute
   '/qr-generator': typeof QrGeneratorRoute
   '/qr-scanner': typeof QrScannerRoute
   '/register': typeof RegisterRoute
@@ -160,7 +177,8 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/track': typeof TrackRoute
   '/users': typeof UsersRoute
-  '/documents/$docId': typeof DocumentsDocIdRoute
+  '/documents_/$docId': typeof DocumentsDocIdRoute
+  '/public-view_/$id': typeof PublicViewIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -172,6 +190,7 @@ export interface FileRouteTypes {
     | '/logout'
     | '/movements'
     | '/profile'
+    | '/public-documents'
     | '/qr-generator'
     | '/qr-scanner'
     | '/register'
@@ -181,6 +200,7 @@ export interface FileRouteTypes {
     | '/track'
     | '/users'
     | '/documents/$docId'
+    | '/public-view/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -190,6 +210,7 @@ export interface FileRouteTypes {
     | '/logout'
     | '/movements'
     | '/profile'
+    | '/public-documents'
     | '/qr-generator'
     | '/qr-scanner'
     | '/register'
@@ -199,6 +220,7 @@ export interface FileRouteTypes {
     | '/track'
     | '/users'
     | '/documents/$docId'
+    | '/public-view/$id'
   id:
     | '__root__'
     | '/'
@@ -208,6 +230,7 @@ export interface FileRouteTypes {
     | '/logout'
     | '/movements'
     | '/profile'
+    | '/public-documents'
     | '/qr-generator'
     | '/qr-scanner'
     | '/register'
@@ -216,17 +239,19 @@ export interface FileRouteTypes {
     | '/signup'
     | '/track'
     | '/users'
-    | '/documents/$docId'
+    | '/documents_/$docId'
+    | '/public-view_/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
-  DocumentsRoute: typeof DocumentsRouteWithChildren
+  DocumentsRoute: typeof DocumentsRoute
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
   MovementsRoute: typeof MovementsRoute
   ProfileRoute: typeof ProfileRoute
+  PublicDocumentsRoute: typeof PublicDocumentsRoute
   QrGeneratorRoute: typeof QrGeneratorRoute
   QrScannerRoute: typeof QrScannerRoute
   RegisterRoute: typeof RegisterRoute
@@ -235,6 +260,8 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   TrackRoute: typeof TrackRoute
   UsersRoute: typeof UsersRoute
+  DocumentsDocIdRoute: typeof DocumentsDocIdRoute
+  PublicViewIdRoute: typeof PublicViewIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -295,6 +322,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QrGeneratorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/public-documents': {
+      id: '/public-documents'
+      path: '/public-documents'
+      fullPath: '/public-documents'
+      preLoaderRoute: typeof PublicDocumentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -344,36 +378,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/documents/$docId': {
-      id: '/documents/$docId'
-      path: '/$docId'
+    '/public-view_/$id': {
+      id: '/public-view_/$id'
+      path: '/public-view/$id'
+      fullPath: '/public-view/$id'
+      preLoaderRoute: typeof PublicViewIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/documents_/$docId': {
+      id: '/documents_/$docId'
+      path: '/documents/$docId'
       fullPath: '/documents/$docId'
       preLoaderRoute: typeof DocumentsDocIdRouteImport
-      parentRoute: typeof DocumentsRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface DocumentsRouteChildren {
-  DocumentsDocIdRoute: typeof DocumentsDocIdRoute
-}
-
-const DocumentsRouteChildren: DocumentsRouteChildren = {
-  DocumentsDocIdRoute: DocumentsDocIdRoute,
-}
-
-const DocumentsRouteWithChildren = DocumentsRoute._addFileChildren(
-  DocumentsRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
-  DocumentsRoute: DocumentsRouteWithChildren,
+  DocumentsRoute: DocumentsRoute,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,
   MovementsRoute: MovementsRoute,
   ProfileRoute: ProfileRoute,
+  PublicDocumentsRoute: PublicDocumentsRoute,
   QrGeneratorRoute: QrGeneratorRoute,
   QrScannerRoute: QrScannerRoute,
   RegisterRoute: RegisterRoute,
@@ -382,7 +412,19 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   TrackRoute: TrackRoute,
   UsersRoute: UsersRoute,
+  DocumentsDocIdRoute: DocumentsDocIdRoute,
+  PublicViewIdRoute: PublicViewIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

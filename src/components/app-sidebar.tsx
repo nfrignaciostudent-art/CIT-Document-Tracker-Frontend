@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import {
   LayoutDashboard,
   FileText,
@@ -9,9 +10,9 @@ import {
   ArrowRightLeft,
   Users,
   UserCircle,
-  
   Settings,
   LogOut,
+  Globe,
 } from "lucide-react";
 import {
   Sidebar,
@@ -43,6 +44,9 @@ const logs = [
 const admin = [
   { title: "Users", url: "/users", icon: Users },
   { title: "Profile", url: "/profile", icon: UserCircle },
+];
+const publicDocMenu = [
+  { title: "Public Documents", url: "/public-documents", icon: Globe },
 ];
 
 function Section({
@@ -88,6 +92,10 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const current = useRouterState({ select: (r) => r.location.pathname });
 
+  const { user: currentUser } = useCurrentUser();
+
+  const role = currentUser?.role || "user";
+
   return (
     <Sidebar
       collapsible="icon"
@@ -111,9 +119,22 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent className="px-1">
         <Section label="Tracking" items={tracking} current={current} />
-        <Section label="QR Tools" items={qr} current={current} />
-        <Section label="Logs" items={logs} current={current} />
-        <Section label="Administration" items={admin} current={current} />
+        
+        {role !== "user" && (
+          <Section label="QR Tools" items={qr} current={current} />
+        )}
+
+        {(role === "admin" || role === "dean") && (
+          <Section label="Public Sharing" items={publicDocMenu} current={current} />
+        )}
+        
+        {role !== "user" && (
+          <Section label="Logs" items={logs} current={current} />
+        )}
+        
+        {role === "admin" && (
+          <Section label="Administration" items={admin} current={current} />
+        )}
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border/40 p-2">
         <SidebarMenu>

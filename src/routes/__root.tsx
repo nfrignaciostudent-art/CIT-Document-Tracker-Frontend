@@ -96,10 +96,28 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+import { useEffect } from "react";
+import { CIT_VAULT } from "@/lib/crypto";
+import { useCurrentUser } from "@/hooks/use-current-user";
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isPublic = PUBLIC_ROUTES.includes(pathname);
+  const isPublic = PUBLIC_ROUTES.includes(pathname) || pathname.startsWith("/public-view/");
+
+  const { user } = useCurrentUser();
+
+  useEffect(() => {
+    try {
+      if (user) {
+        CIT_VAULT.restoreFromSession(user.encryptedIdeaKey || null);
+      } else {
+        CIT_VAULT.restoreFromSession(null);
+      }
+    } catch (e) {
+      console.error("Failed to restore vault key", e);
+    }
+  }, [user]);
 
   if (isPublic) {
     return (

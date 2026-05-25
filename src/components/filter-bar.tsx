@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { statusOrder, type DocStatus } from "@/lib/mock-data";
+import { statusOrder, type DocStatus } from "@/lib/dashboard-utils";
 
 export function FilterBar({
   query,
