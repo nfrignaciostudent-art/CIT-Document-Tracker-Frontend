@@ -117,6 +117,77 @@ function QRGeneratorPage() {
           <p className="relative mt-1 max-w-xs text-center text-xs text-primary-foreground/70">{doc.name}</p>
         </div>
       </div>
+
+      {/* ==================================================================
+          PRINT LAYOUT: MODERN SINGLE-PAGE OFFICIAL DOCUMENT QR RECEIPT
+          ================================================================== */}
+      <div id="qr-receipt-print" className="hidden print:block font-sans text-slate-900 bg-white max-w-[320px] mx-auto p-6 rounded-2xl border border-slate-200 text-center relative">
+        <style dangerouslySetInnerHTML={{ __html: `
+          @media print {
+            @page {
+              size: portrait;
+              margin: 10mm;
+            }
+            body {
+              background: white !important;
+              color: #0f172a !important;
+              font-family: 'Inter', sans-serif !important;
+            }
+            /* Hide web page layout completely when printing */
+            header, nav, aside, footer, [data-sidebar="sidebar"], .top-header, .no-print, button, .tabs-list, [role="tablist"], .mx-auto.max-w-5xl {
+              display: none !important;
+            }
+            #qr-receipt-print {
+              display: block !important;
+              width: 100% !important;
+              max-width: 320px !important;
+              border: 1px solid #e2e8f0 !important;
+              padding: 24px !important;
+              margin: 20px auto !important;
+              box-shadow: none !important;
+              background: white !important;
+            }
+          }
+        ` }} />
+        
+        {/* Header decoration */}
+        <div className="space-y-1 pb-4 border-b border-dashed border-slate-200">
+          <div className="inline-flex size-10 items-center justify-center rounded-xl bg-[#0B2545] text-[#EEB902] font-bold text-lg ring-1 ring-[#EEB902]/40">
+            C
+          </div>
+          <h2 className="text-sm font-extrabold uppercase tracking-[0.2em] text-slate-900 mt-2">CIT DocTracker</h2>
+          <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Official QR Tracking Slip</p>
+        </div>
+
+        {/* QR Code */}
+        <div className="py-6 flex justify-center">
+          <div className="p-3 border border-slate-100 rounded-xl bg-white shadow-sm ring-1 ring-slate-150">
+            <QRCodeCanvas value={trackUrl} size={180} fgColor="#0B2545" includeMargin={false} />
+          </div>
+        </div>
+
+        {/* Document Details */}
+        <div className="space-y-3 pt-4 border-t border-dashed border-slate-200 text-left">
+          <div>
+            <span className="text-[9px] uppercase tracking-wider text-slate-400 font-bold block">Document Name</span>
+            <span className="text-xs font-semibold text-slate-800 line-clamp-2 mt-0.5">{doc.name}</span>
+          </div>
+          <div>
+            <span className="text-[9px] uppercase tracking-wider text-slate-400 font-bold block">Tracking ID</span>
+            <span className="text-sm font-mono font-bold text-slate-950 block mt-0.5">{getFullDisplayId(doc)}</span>
+          </div>
+          <div>
+            <span className="text-[9px] uppercase tracking-wider text-slate-400 font-bold block">Department</span>
+            <span className="text-xs font-semibold text-slate-700 block mt-0.5">{doc.department || "General"}</span>
+          </div>
+        </div>
+
+        {/* Footer info */}
+        <div className="mt-6 pt-4 border-t border-slate-100 text-[10px] text-slate-400 space-y-1.5">
+          <p className="font-semibold text-center w-full block">Scan to track live progress</p>
+          <p className="font-mono text-[8px] break-all text-slate-400/90 leading-tight bg-slate-50 p-2 rounded-lg text-center w-full block">{trackUrl}</p>
+        </div>
+      </div>
     </div>
   );
 }
